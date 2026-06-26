@@ -64,14 +64,6 @@ export * from './contexts/Theme/ThemeProvider';
 
 export {default as useTheme} from './contexts/Theme/useTheme';
 
-export {default as BrandingContext} from './contexts/Branding/BrandingContext';
-export * from './contexts/Branding/BrandingContext';
-
-export {default as BrandingProvider} from './contexts/Branding/BrandingProvider';
-export * from './contexts/Branding/BrandingProvider';
-
-export {default as useBrandingContext} from './contexts/Branding/useBrandingContext';
-
 export {default as useBrowserUrl} from './hooks/useBrowserUrl';
 export * from './hooks/useBrowserUrl';
 
@@ -79,8 +71,6 @@ export {default as useTranslation} from './hooks/useTranslation';
 export * from './hooks/useTranslation';
 
 export {default as useForm} from './hooks/useForm';
-
-export {default as useBranding} from './hooks/useBranding';
 
 export {default as BaseSignInButton} from './components/actions/SignInButton/BaseSignInButton';
 export * from './components/actions/SignInButton/BaseSignInButton';
@@ -175,6 +165,12 @@ export * from './components/presentation/UserProfile/BaseUserProfile';
 
 export {default as UserProfile} from './components/presentation/UserProfile/UserProfile';
 export * from './components/presentation/UserProfile/UserProfile';
+
+export {default as BaseUserAvatar} from './components/presentation/UserAvatar/BaseUserAvatar';
+export * from './components/presentation/UserAvatar/BaseUserAvatar';
+
+export {default as UserAvatar} from './components/presentation/UserAvatar/UserAvatar';
+export * from './components/presentation/UserAvatar/UserAvatar';
 
 export {default as BaseUserDropdown} from './components/presentation/UserDropdown/BaseUserDropdown';
 export type {BaseUserDropdownProps} from './components/presentation/UserDropdown/BaseUserDropdown';

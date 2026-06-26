@@ -24,7 +24,6 @@ export type {ThunderIDPluginOptions} from './plugins/ThunderIDPlugin';
 export {default as ThunderIDProvider} from './providers/ThunderIDProvider';
 
 // ── Providers ──
-export {default as BrandingProvider} from './providers/BrandingProvider';
 export {default as FlowMetaProvider} from './providers/FlowMetaProvider';
 export {default as FlowProvider} from './providers/FlowProvider';
 export {default as I18nProvider} from './providers/I18nProvider';
@@ -34,7 +33,6 @@ export {default as UserProvider} from './providers/UserProvider';
 
 // ── Composables ──
 export {default as useThunderID} from './composables/useThunderID';
-export {default as useBranding} from './composables/useBranding';
 export {default as useFlow} from './composables/useFlow';
 export {default as useFlowMeta} from './composables/useFlowMeta';
 export {default as useI18n} from './composables/useI18n';
@@ -50,7 +48,6 @@ export {default as ThunderIDVueClient} from './ThunderIDVueClient';
 // ── Keys ──
 export {
   THUNDERID_KEY,
-  BRANDING_KEY,
   FLOW_KEY,
   FLOW_META_KEY,
   I18N_KEY,
@@ -63,7 +60,6 @@ export {
 export type {ThunderIDVueConfig} from './models/config';
 export type {
   ThunderIDContext,
-  BrandingContextValue,
   FlowContextValue,
   FlowMessage,
   FlowMetaContextValue,

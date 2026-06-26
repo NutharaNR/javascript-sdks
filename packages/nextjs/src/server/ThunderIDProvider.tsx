@@ -18,13 +18,12 @@
 
 'use server';
 
-import {BrandingPreference, ThunderIDRuntimeError, IdToken, Organization, User, UserProfile} from '@thunderid/node';
+import {ThunderIDRuntimeError, IdToken, Organization, User, UserProfile} from '@thunderid/node';
 import {ThunderIDProviderProps} from '@thunderid/react';
 import {FC, PropsWithChildren, ReactElement} from 'react';
 import clearSession from './actions/clearSession';
 import createOrganization from './actions/createOrganization';
 import getAllOrganizations from './actions/getAllOrganizations';
-import getBrandingPreference from './actions/getBrandingPreference';
 import getCurrentOrganizationAction from './actions/getCurrentOrganizationAction';
 import getMyOrganizations from './actions/getMyOrganizations';
 import getSessionId from './actions/getSessionId';
@@ -129,7 +128,6 @@ const ThunderIDServerProvider: FC<PropsWithChildren<ThunderIDServerProviderProps
     orgHandle: '',
   };
   let myOrganizations: Organization[] = [];
-  let brandingPreference: BrandingPreference | null = null;
 
   if (signedIn) {
     let updatedBaseUrl: string | undefined = config?.baseUrl;
@@ -195,24 +193,6 @@ const ThunderIDServerProvider: FC<PropsWithChildren<ThunderIDServerProviderProps
     }
   }
 
-  // Fetch branding preference if branding is enabled in config
-  if (config?.preferences?.theme?.inheritFromBranding !== false) {
-    try {
-      brandingPreference = await getBrandingPreference(
-        {
-          baseUrl: config?.baseUrl!,
-          locale: 'en-US',
-          name: config.applicationId || config.organizationHandle,
-          type: config.applicationId ? 'APP' : 'ORG',
-        },
-        sessionId,
-      );
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn('[ThunderIDServerProvider] Failed to fetch branding preference:', error);
-    }
-  }
-
   return (
     <ThunderIDClientProvider
       organizationHandle={config?.organizationHandle}
@@ -236,7 +216,6 @@ const ThunderIDServerProvider: FC<PropsWithChildren<ThunderIDServerProviderProps
       myOrganizations={myOrganizations}
       getAllOrganizations={getAllOrganizations}
       switchOrganization={switchOrganization}
-      brandingPreference={brandingPreference}
       createOrganization={createOrganization}
     >
       {children}

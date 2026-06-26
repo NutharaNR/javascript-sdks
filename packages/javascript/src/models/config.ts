@@ -450,13 +450,6 @@ export interface ThemePreferences {
    */
   direction?: 'ltr' | 'rtl';
   /**
-   * Inherit branding from WSO2 Identity Server or ThunderID.
-   * When set to `true`, the SDK will fetch and apply branding preferences from the server.
-   * Defaults to `false` — branding is not fetched unless explicitly enabled.
-   * @default false
-   */
-  inheritFromBranding?: boolean;
-  /**
    * The theme mode to use. Defaults to 'system'.
    */
   mode?: ThemeMode;

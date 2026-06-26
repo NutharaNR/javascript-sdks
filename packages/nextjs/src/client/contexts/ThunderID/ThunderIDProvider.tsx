@@ -26,7 +26,6 @@ import {
   UpdateMeProfileConfig,
   User,
   UserProfile,
-  BrandingPreference,
   TokenResponse,
   CreateOrganizationPayload,
   ThunderIDRuntimeError,
@@ -39,7 +38,6 @@ import {
   ThemeProvider,
   ThunderIDProviderProps,
   OrganizationProvider,
-  BrandingProvider,
   getActiveTheme,
 } from '@thunderid/react';
 import {ReadonlyURLSearchParams} from 'next/dist/client/components/navigation.react-server';
@@ -56,7 +54,6 @@ import logger from '../../../utils/logger';
 export type ThunderIDClientProviderProps = Partial<Omit<ThunderIDProviderProps, 'baseUrl' | 'clientId'>> &
   Pick<ThunderIDProviderProps, 'baseUrl' | 'clientId'> & {
     applicationId: ThunderIDContextProps['applicationId'];
-    brandingPreference?: BrandingPreference | null;
     clearSession: () => Promise<void>;
     createOrganization: (payload: CreateOrganizationPayload, sessionId: string) => Promise<Organization>;
     currentOrganization: Organization;
@@ -108,7 +105,6 @@ const ThunderIDClientProvider: FC<PropsWithChildren<ThunderIDClientProviderProps
   revalidateMyOrganizations,
   getAllOrganizations,
   switchOrganization,
-  brandingPreference,
 }: PropsWithChildren<ThunderIDClientProviderProps>) => {
   const reRenderCheckRef: RefObject<boolean> = useRef(false);
   const router: AppRouterInstance = useRouter();
@@ -203,8 +199,11 @@ const ThunderIDClientProvider: FC<PropsWithChildren<ThunderIDClientProviderProps
     const result: any = await signIn(payload, request);
 
     // Redirect based flow URL is sent as `signInUrl` in the response.
+    // Use window.location.href instead of router.push() — the OAuth authorization
+    // endpoint is on an external server, and router.push() would send RSC fetch
+    // headers that the identity provider doesn't understand, causing a CORS error.
     if (result?.data?.signInUrl) {
-      router.push(result.data.signInUrl);
+      window.location.href = result.data.signInUrl;
 
       return undefined;
     }
@@ -320,28 +319,25 @@ const ThunderIDClientProvider: FC<PropsWithChildren<ThunderIDClientProviderProps
     <ThunderIDContext.Provider value={contextValue}>
       <I18nProvider preferences={preferences?.i18n}>
         <FlowMetaProvider enabled={preferences?.resolveFromMeta !== false}>
-          <BrandingProvider brandingPreference={brandingPreference}>
-            <ThemeProvider
-              theme={preferences?.theme?.overrides}
-              mode={getActiveTheme(preferences?.theme?.mode as any)}
-              inheritFromBranding
-            >
-              <FlowProvider>
-                <UserProvider profile={userProfile} onUpdateProfile={handleProfileUpdate} updateProfile={updateProfile}>
-                  <OrganizationProvider
-                    createOrganization={createOrganization}
-                    getAllOrganizations={getAllOrganizations}
-                    myOrganizations={myOrganizations}
-                    currentOrganization={currentOrganization}
-                    onOrganizationSwitch={switchOrganization as any}
-                    revalidateMyOrganizations={revalidateMyOrganizations as any}
-                  >
-                    {children}
-                  </OrganizationProvider>
-                </UserProvider>
-              </FlowProvider>
-            </ThemeProvider>
-          </BrandingProvider>
+          <ThemeProvider
+            theme={preferences?.theme?.overrides}
+            mode={getActiveTheme(preferences?.theme?.mode as any)}
+          >
+            <FlowProvider>
+              <UserProvider profile={userProfile} onUpdateProfile={handleProfileUpdate} updateProfile={updateProfile}>
+                <OrganizationProvider
+                  createOrganization={createOrganization}
+                  getAllOrganizations={getAllOrganizations}
+                  myOrganizations={myOrganizations}
+                  currentOrganization={currentOrganization}
+                  onOrganizationSwitch={switchOrganization as any}
+                  revalidateMyOrganizations={revalidateMyOrganizations as any}
+                >
+                  {children}
+                </OrganizationProvider>
+              </UserProvider>
+            </FlowProvider>
+          </ThemeProvider>
         </FlowMetaProvider>
       </I18nProvider>
     </ThunderIDContext.Provider>

@@ -18,7 +18,6 @@
 
 import type {
   AllOrganizationsApiResponse,
-  BrandingPreference,
   CreateOrganizationPayload,
   FlowMetadataResponse,
   HttpRequestConfig,
@@ -252,44 +251,14 @@ export interface FlowMetaContextValue {
  * Shape of the Theme context exposed by `useTheme()`.
  */
 export interface ThemeContextValue {
-  /** Error from the branding theme fetch, if any. */
-  brandingError: Readonly<Ref<Error | null>>;
   /** The current color scheme ('light' | 'dark'). */
   colorScheme: Readonly<Ref<'light' | 'dark'>>;
   /** The text direction for the UI. */
   direction: Readonly<Ref<'ltr' | 'rtl'>>;
-  /** Whether the theme inherits from ThunderID branding preferences. */
-  inheritFromBranding: boolean;
-  /** Whether the branding theme is currently loading. */
-  isBrandingLoading: Readonly<Ref<boolean>>;
   /** The resolved Theme object used by all styled components. */
   theme: Readonly<Ref<Theme>>;
   /** Toggle between light and dark mode. */
   toggleTheme: () => void;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Branding Context
-// ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * Shape of the Branding context exposed by `useBranding()`.
- */
-export interface BrandingContextValue {
-  /** The active theme from the branding preference ('light' | 'dark'), or null. */
-  activeTheme: Readonly<Ref<'light' | 'dark' | null>>;
-  /** The raw branding preference data from the server. */
-  brandingPreference: Readonly<Ref<BrandingPreference | null>>;
-  /** Error from the branding fetch, if any. */
-  error: Readonly<Ref<Error | null>>;
-  /** Trigger a branding preference fetch (deduplicated). */
-  fetchBranding: () => Promise<void>;
-  /** Whether the branding preference is currently loading. */
-  isLoading: Readonly<Ref<boolean>>;
-  /** Force a fresh branding preference fetch (bypasses dedup). */
-  refetch: () => Promise<void>;
-  /** The transformed `Theme` object derived from the branding preference. */
-  theme: Readonly<Ref<Theme | null>>;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

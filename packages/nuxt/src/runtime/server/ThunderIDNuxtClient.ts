@@ -30,15 +30,12 @@ import {
   type UserProfile,
   type UpdateMeProfileConfig,
   type AllOrganizationsApiResponse,
-  getBrandingPreference,
   getMeOrganizations,
   getAllOrganizations,
   createOrganization,
   getOrganization,
   type ExtendedAuthorizeRequestUrlParams,
   type SignUpOptions,
-  type GetBrandingPreferenceConfig,
-  type BrandingPreference,
 } from '@thunderid/node';
 import type {ThunderIDNuxtConfig, ThunderIDSessionPayload} from '../types';
 
@@ -200,10 +197,6 @@ class ThunderIDNuxtClient extends ThunderIDNodeClient<ThunderIDNuxtConfig> {
       baseUrl,
       headers: {Authorization: `Bearer ${accessToken}`},
     });
-  }
-
-  async getBrandingPreference(config: GetBrandingPreferenceConfig): Promise<BrandingPreference> {
-    return getBrandingPreference(config);
   }
 
   override async updateUserProfile(config: UpdateMeProfileConfig, sessionId: string): Promise<User> {

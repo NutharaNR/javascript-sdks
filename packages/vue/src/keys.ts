@@ -19,7 +19,6 @@
 import type {InjectionKey} from 'vue';
 import type {
   ThunderIDContext,
-  BrandingContextValue,
   FlowContextValue,
   FlowMetaContextValue,
   I18nContextValue,
@@ -57,11 +56,6 @@ export const FLOW_META_KEY: InjectionKey<FlowMetaContextValue> = Symbol('thunder
  * Injection key for the Theme context (color scheme, CSS variables, toggle).
  */
 export const THEME_KEY: InjectionKey<ThemeContextValue> = Symbol('thunderid-theme');
-
-/**
- * Injection key for the Branding context (branding preferences from server).
- */
-export const BRANDING_KEY: InjectionKey<BrandingContextValue> = Symbol('thunderid-branding');
 
 /**
  * Injection key for the I18n context (translation function, language switching).

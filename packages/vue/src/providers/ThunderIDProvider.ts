@@ -47,7 +47,6 @@ import {
   type PropType,
   type VNode,
 } from 'vue';
-import BrandingProvider from './BrandingProvider';
 import FlowMetaProvider from './FlowMetaProvider';
 import FlowProvider from './FlowProvider';
 import I18nProvider from './I18nProvider';
@@ -484,70 +483,67 @@ const ThunderIDProvider: Component = defineComponent({
             {enabled: true},
             {
               default: (): any =>
-                h(BrandingProvider, null, {
+                h(ThemeProvider, null, {
                   default: (): any =>
-                    h(ThemeProvider, null, {
+                    h(FlowProvider, null, {
                       default: (): any =>
-                        h(FlowProvider, null, {
-                          default: (): any =>
-                            h(
-                              UserProvider,
-                              {
-                                onUpdateProfile: (updatedUser: User): void => {
-                                  user.value = updatedUser;
-                                  userProfile.value = {
-                                    flattenedProfile: generateFlattenedUserProfile(
-                                      updatedUser,
-                                      userProfile.value?.schemas ?? [],
-                                    ),
-                                    profile: updatedUser,
-                                    schemas: userProfile.value?.schemas ?? [],
-                                  };
+                        h(
+                          UserProvider,
+                          {
+                            onUpdateProfile: (updatedUser: User): void => {
+                              user.value = updatedUser;
+                              userProfile.value = {
+                                flattenedProfile: generateFlattenedUserProfile(
+                                  updatedUser,
+                                  userProfile.value?.schemas ?? [],
+                                ),
+                                profile: updatedUser,
+                                schemas: userProfile.value?.schemas ?? [],
+                              };
+                            },
+                            profile: userProfile.value,
+                            revalidateProfile: async (): Promise<void> => {
+                              try {
+                                const decodedToken: IdToken = await client.getDecodedIdToken();
+                                const claims: User = extractUserClaimsFromIdToken(decodedToken);
+                                user.value = claims;
+                                userProfile.value = {
+                                  flattenedProfile: claims,
+                                  profile: claims,
+                                  schemas: [],
+                                };
+                              } catch {
+                                // silent
+                              }
+                            },
+                          },
+                          {
+                            default: (): any =>
+                              h(
+                                OrganizationProvider,
+                                {
+                                  currentOrganization: currentOrganization.value,
+                                  getAllOrganizations: async (): Promise<AllOrganizationsApiResponse> =>
+                                    client.getAllOrganizations({baseUrl: resolvedBaseUrl.value}),
+                                  myOrganizations: myOrganizations.value,
+                                  onOrganizationSwitch: switchOrganization,
+                                  revalidateMyOrganizations: async (): Promise<Organization[]> => {
+                                    const baseUrl: string = resolvedBaseUrl.value;
+                                    try {
+                                      const orgs: Organization[] = await client.getMyOrganizations({baseUrl});
+                                      myOrganizations.value = orgs || [];
+                                      return orgs || [];
+                                    } catch {
+                                      return [];
+                                    }
+                                  },
                                 },
-                                profile: userProfile.value,
-                                revalidateProfile: async (): Promise<void> => {
-                                  try {
-                                    const decodedToken: IdToken = await client.getDecodedIdToken();
-                                    const claims: User = extractUserClaimsFromIdToken(decodedToken);
-                                    user.value = claims;
-                                    userProfile.value = {
-                                      flattenedProfile: claims,
-                                      profile: claims,
-                                      schemas: [],
-                                    };
-                                  } catch {
-                                    // silent
-                                  }
+                                {
+                                  default: (): any => slots['default']?.(),
                                 },
-                              },
-                              {
-                                default: (): any =>
-                                  h(
-                                    OrganizationProvider,
-                                    {
-                                      currentOrganization: currentOrganization.value,
-                                      getAllOrganizations: async (): Promise<AllOrganizationsApiResponse> =>
-                                        client.getAllOrganizations({baseUrl: resolvedBaseUrl.value}),
-                                      myOrganizations: myOrganizations.value,
-                                      onOrganizationSwitch: switchOrganization,
-                                      revalidateMyOrganizations: async (): Promise<Organization[]> => {
-                                        const baseUrl: string = resolvedBaseUrl.value;
-                                        try {
-                                          const orgs: Organization[] = await client.getMyOrganizations({baseUrl});
-                                          myOrganizations.value = orgs || [];
-                                          return orgs || [];
-                                        } catch {
-                                          return [];
-                                        }
-                                      },
-                                    },
-                                    {
-                                      default: (): any => slots['default']?.(),
-                                    },
-                                  ),
-                              },
-                            ),
-                        }),
+                              ),
+                          },
+                        ),
                     }),
                 }),
             },

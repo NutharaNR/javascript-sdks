@@ -17,7 +17,6 @@
  */
 
 import type {
-  BrandingPreference,
   I18nPreferences,
   Organization,
   TokenEndpointAuthMethod,
@@ -53,11 +52,6 @@ export interface ThunderIDNuxtConfig {
     /** i18n configuration forwarded to `I18nProvider`. */
     i18n?: I18nPreferences;
     theme?: {
-      /**
-       * When true (default), the Nitro plugin fetches the branding preference
-       * from ThunderID and passes it to `BrandingProvider` / `ThemeProvider`.
-       */
-      inheritFromBranding?: boolean;
       /**
        * Theme mode forwarded to the Vue SDK's `ThemeProvider`.
        * - `'light'` (default) | `'dark'`: Fixed color scheme. Toggle at runtime with `useTheme().toggleTheme()`.
@@ -138,8 +132,6 @@ export interface ThunderIDTempSessionPayload extends JWTPayload {
  * hydrated `useState` keys so the client never re-fetches on first render.
  */
 export interface ThunderIDSSRData {
-  /** Branding preference fetched from ThunderID (null when `preferences.theme.inheritFromBranding` is false). */
-  brandingPreference: BrandingPreference | null;
   /** The organisation the user is currently acting within (null when not in an org). */
   currentOrganization: Organization | null;
   isSignedIn: boolean;
