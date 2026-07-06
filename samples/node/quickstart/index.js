@@ -6,7 +6,26 @@ const { ThunderIDNodeClient } = require('@thunderid/node');
 const PORT = 3000;
 const SESSION_COOKIE = 'tid_session';
 
+const REQUIRED_ENV_VARS = ['THUNDERID_CLIENT_ID', 'THUNDERID_CLIENT_SECRET'];
+const missingEnvVars = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
+
 const auth = new ThunderIDNodeClient();
+
+function renderConfigNeeded() {
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Configuration needed</title>
+<style>body{font-family:system-ui,sans-serif;max-width:560px;margin:60px auto;padding:0 24px;color:#05213f}
+h1{font-size:22px;font-weight:700;margin:0 0 8px}p{font-size:14px;color:#5a7085;line-height:1.6}
+ul{background:#f7f9fc;border:1px solid #dde3ec;border-radius:8px;padding:16px 16px 16px 32px;margin:20px 0}
+li{font-family:monospace;font-size:13px;padding:2px 0}
+code{background:#f7f9fc;border:1px solid #dde3ec;border-radius:4px;padding:2px 6px;font-size:13px}</style>
+</head><body>
+<h1>Configuration needed</h1>
+<p>This quickstart can't reach ThunderID yet. Set the following environment variable(s), then restart the server:</p>
+<ul>${missingEnvVars.map((key) => `<li>${key}</li>`).join('')}</ul>
+<p>Copy <code>.env.example</code> to <code>.env</code>, fill in the values from your ThunderID application, then run <code>node index.js</code> again.</p>
+</body></html>`;
+}
 
 function getSessionId(req) {
   const cookieHeader = req.headers.cookie ?? '';
@@ -18,19 +37,25 @@ function getSessionId(req) {
 }
 
 async function main() {
-  await auth.initialize({
-    clientId: process.env.THUNDERID_CLIENT_ID,
-    clientSecret: process.env.THUNDERID_CLIENT_SECRET,
-    baseUrl: process.env.THUNDERID_BASE_URL || 'https://localhost:8090',
-    afterSignInUrl: 'http://localhost:3000/callback',
-    afterSignOutUrl: 'http://localhost:3000',
-  });
+  if (missingEnvVars.length === 0) {
+    await auth.initialize({
+      clientId: process.env.THUNDERID_CLIENT_ID,
+      clientSecret: process.env.THUNDERID_CLIENT_SECRET,
+      baseUrl: process.env.THUNDERID_BASE_URL || 'https://localhost:8090',
+      afterSignInUrl: 'http://localhost:3000/callback',
+      afterSignOutUrl: 'http://localhost:3000',
+    });
+  }
 
   const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, `http://localhost:${PORT}`);
 
     try {
-      if (url.pathname === '/') {
+      if (url.pathname === '/' && missingEnvVars.length > 0) {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        return res.end(renderConfigNeeded());
+
+      } else if (url.pathname === '/') {
         const sessionId = getSessionId(req);
         const signedIn = sessionId && (await auth.isSignedIn(sessionId));
         res.writeHead(200, { 'Content-Type': 'text/html' });

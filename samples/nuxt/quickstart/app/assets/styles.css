@@ -310,6 +310,50 @@ button:focus-visible {
   color: var(--color-text-muted);
 }
 
+/* ── Config notice ── */
+.config-badge {
+  color: #e88b3a;
+}
+
+.config-list {
+  width: 100%;
+  max-width: 420px;
+  text-align: left;
+  list-style: none;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  padding: 0 16px;
+  margin: 4px 0 28px;
+}
+
+.config-list-item {
+  padding: 10px 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.config-list-item:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.config-hint {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.config-hint code {
+  background: rgba(54, 136, 255, 0.1);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+}
+
 /* ── Responsive ── */
 @media (max-width: 480px) {
   .nav {
@@ -365,6 +409,25 @@ button:focus-visible {
 
 .home-greeting-text {
   min-width: 0;
+}
+
+.home-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.home-avatar--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(54, 136, 255, 0.12);
+  color: var(--color-primary);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .home-greeting-name {
@@ -538,6 +601,53 @@ button:focus-visible {
   opacity: 0.7;
   transition: opacity 0.2s;
   padding-top: 2px;
+}
+
+/* ── Sign in / Sign up pages ── */
+.auth-main {
+  width: 100%;
+  min-height: calc(100vh - 52px);
+  margin-top: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.auth-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 40px 32px;
+  max-width: 420px;
+  width: 100%;
+}
+
+.auth-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.auth-subtitle {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.auth-switch {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-align: center;
 }
 
 /* ── Profile page ── */
