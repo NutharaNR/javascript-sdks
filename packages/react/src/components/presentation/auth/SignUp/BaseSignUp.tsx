@@ -29,7 +29,7 @@ import {
   buildValidatorFromRules,
   Preferences,
 } from '@thunderid/browser';
-import {FC, ReactElement, ReactNode, useCallback, useContext, useEffect, useRef, useState} from 'react';
+import {FC, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
 import useStyles from './BaseSignUp.styles';
 import ComponentRendererContext, {
   ComponentRendererMap,
@@ -455,9 +455,10 @@ const BaseSignUpContent: FC<BaseSignUpProps> = ({
     [t],
   );
 
-  const formFields: any = (currentFlow?.data as any)?.components
-    ? extractFormFields((currentFlow!.data as any).components)
-    : [];
+  const formFields: any = useMemo(
+    () => ((currentFlow?.data as any)?.components ? extractFormFields((currentFlow!.data as any).components) : []),
+    [currentFlow, extractFormFields],
+  );
 
   const form: any = useForm<Record<string, string>>({
     fields: formFields,
